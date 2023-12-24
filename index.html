@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Middlewear</title>
+    <style>
+        h1{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Middlewear</h1>
+    <p><h4>What Is Middleware? </h4> 
+        A request handler with access to the application's request-response cycle is known as middleware. It's a function that holds the request object, the response object, and the middleware function. Middleware can also send the response to the server before the request.
+        <h4>Functions of Middleware</h4>
+        <ul>
+            <li>Executes any code</li>
+            <li>We can make changes to the request-response objects</li>
+            <li>Middleware can also End the request-response cycle</li>
+            <li>Middleware can call the next middleware function in a stack </li>
+        </ul>
+    
+        We use these functions to modify our middleware to perform many tasks. If we want to block our site for some country or if we're going to check the authentication of a user etc., we use middleware for that.
+        
+        
+       <h4> What app.use() do in our Express app?</h4>
+        An Express application can use 5 different types of middleware. The .use() method in the express is an Application-level middleware.
+        syntax: app.use(path, middleware function/s)
+        An Express application is essentially a series of middleware function calls. 
+        
+        <h4>Types of Middlewares in express:</h4>
+        These are all 5 different middleware of an express application.
+        	<h4>Application-level middleware.</h4>
+        	<h4>Router-level middleware.</h4>
+        	<h4>Error-handling middleware.</h4>
+        	<h4>Built-in middleware.</h4>
+        <h4>Third-party middleware.</h4>
+
+         <h3>Examples:</h3> 
+        <h4>Application-level middleware</h4>
+        app.use((req, res, next) => {<br>
+          console.log('Time:', Date.now())<br>
+          next()<br>
+        })<br>
+        <h4>Router-level middleware</h4>
+        Router-level middleware works in the same way as application-level middleware, except it is bound to an instance of express.Router()<br>
+        const express = require('express')<br>
+        const app = express()<br>
+        const router = express.Router()<br>
+        
+        // a middleware function with no mount path. This code is executed for every request to the router<br>
+        router.use((req, res, next) => {<br>
+          console.log('Time:', Date.now())<br>
+          next()<br>
+        })<br>
+        
+        // a middleware sub-stack shows request info for any type of HTTP request to the /user/:id path<br>
+        router.use('/user/:id', (req, res, next) => {<br>
+          console.log('Request URL:', req.originalUrl)<br>
+          next()<br>
+        }, (req, res, next) => {<br>
+          console.log('Request Type:', req.method)<br>
+          next()<br>
+        })<br>
+        
+        // a middleware sub-stack that handles GET requests to the /user/:id path<br>
+        router.get('/user/:id', (req, res, next) => {<br>
+          // if the user ID is 0, skip to the next router<br>
+          if (req.params.id === '0') next('route')<br>
+          // otherwise pass control to the next middleware function in this stack<br>
+          else next()<br>
+        }, (req, res, next) => {<br>
+          // render a regular page<br>
+          res.render('regular')<br>
+        })<br>
+     <h4>   Error-handling middleware</h4>
+        Define error-handling middleware functions in the same way as other middleware functions, except with four arguments instead of three, specifically with the signature (err, req, res, next):<br>
+        app.use((err, req, res, next) => {<br>
+          console.error(err.stack)<br>
+          res.status(500).send('Something broke!')<br>
+        })<br>
+        <h4>Built-in middleware</h4>
+        Express has the following built-in middleware functions:<br>
+        app.use(express.static())                           <br>               // serves static assets such as HTML files, images, and so on <br>
+          app.use(express.json()) <br>                                           // parses incoming requests with JSON payloads. <br>
+          app.use(express.urlencoded())<br>                                      // parses incoming requests with URL-encoded payloads. 
+        <h4>Third-party middleware</h4>
+        you can install the node.js module for the required functionality, then load it in your app at the application level or at the router level.<br>
+        const express = require('express')<br>
+        const app = express()<br>
+        const cookieParser = require('cookie-parser')<br>
+        
+        // load the cookie-parsing middleware<br>
+        app.use(cookieParser())<br>
+        
+        </p>
+    
+</body>
+</html>
